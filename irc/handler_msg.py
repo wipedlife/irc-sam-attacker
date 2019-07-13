@@ -28,7 +28,7 @@ class handler_msg(IRCCommands):
            for line in data.split('\n'):
             spl=line.split(' ')
             if ('PONG' in line or 'PING' in line) and (len(spl) == 4 and spl[2] in spl[0] or len(spl) == 2):
-                 self.pong(spl[3])
+                 self.pong(spl[1])
             if len(spl) > 4:
                 if spl[1] == 'PRIVMSG': 
                     useri=self.getuser(spl[0])

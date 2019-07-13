@@ -9,7 +9,7 @@ class IRCCommands:
         data=(self.sock.recv(s)).decode()  
         #print ("Data: %s" %(data) )
         if len(data) == 0:
-            raise Exception('Connection is closed', ' connection was closed') 
+            raise Exception('Connection is closed', ' connection was closed:') 
         return data 
 
    def raw(self,com):
@@ -29,7 +29,8 @@ class IRCCommands:
        self.raw("PRIVMSG %s :%s" % (to, msg) )
    def quit(self,reason):
        self.raw( "QUIT %s" % (reason) )
-       
+
+        
    def getuser(self,user):
        user=user[1:]
        user=user.split("!")

@@ -6,6 +6,7 @@ import time
 class IRCOverlay(IRCCommands):
    samd=None           
    hand=None
+
    def ping_pong(self):
            MAXREAD=30 # OverKill
            ST=1
@@ -31,7 +32,8 @@ class IRCOverlay(IRCCommands):
        self.nick(n)
        self.user(u,r)
        self.ping_pong()
-
+       
+       
                     
             #Commands...
        
@@ -40,17 +42,27 @@ class IRCOverlay(IRCCommands):
       self.samd=SAM().create_dest()
       #with SAM().create_dest() as dest:
       print("Connect to %s" % (addr) )
-      self.sock=self.samd.connect(addr) 
-      print("Connected to %s" % (addr) )
-      return True
+      self.sock=self.samd.connect(addr)
+      answer=self.oread()
+      if "RESULT=OK" in answer:
+       print("Connected to %s" % (addr) )
+       return True
+      else:
+       print("Can't connect to %s" % (addr) )
+       raise Exception("Can't connect to server", "Error with connect:  %s" % (answer) )
     except Exception as err:
       print ("Error %s" % err)
       self.sock.close()
       self.connect(addr)
    def __init__(self,dest,nick,username,realname):
+        if dest is None:
+          self.sock.close()
+          return None
+         
         self.connect(dest)
         self.irc_conn(nick,username,realname)
         self.hand=handler(self.sock)
+
    def __del__(self):
        self.sock.close()
        pass

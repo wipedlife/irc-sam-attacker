@@ -41,7 +41,7 @@ class BotAttack(threading.Thread):
    await self.getVictimChannels()
    await self.trollVictim()
    await self.irc.hand.handl()
-   asyncio.sleep(self.sleepTime)
+   await asyncio.sleep(self.sleepTime)
    pass
 
  def run(self):

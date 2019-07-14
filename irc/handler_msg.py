@@ -5,12 +5,11 @@ class handler_msg(IRCCommands):
   # owner_nick=""
   # owner_hostname=""
    def __init__(self, sock):
-       config=configparser.ConfigParser()
-       config.read("config.ini")
-
+       config=self.read_cfg()
        self.onick=config["OWNER"]["nick"]
        self.ohostname=config["OWNER"]["hostname"]
        self.sock=sock
+
        #print("Handler is was inited")
        
    async def mes_handle(self,msg,to):
@@ -25,7 +24,8 @@ class handler_msg(IRCCommands):
            channels=self.getChannels(com[1])
            self.privmsg(  "Channels of him: %s" %s ( str(channels) ) )
 
-   async def handl(self):
+
+   async def handl(self,choose=""):
        data = self.oread()
        for line in data.split('\n'):
            spl = line.split(' ')
@@ -38,6 +38,14 @@ class handler_msg(IRCCommands):
                    print("%s  with hostname %s write message on %s -> %s" % (useri["nick"], useri["host"], spl[2], msg))
                    if useri["nick"] == self.onick and useri['host'] == self.ohostname:
                        await self.mes_handle(line.split(':')[2], spl[2])
+           print("Line: %s" % (line))
+           if len(spl) >= 3 and spl[1] == 'NICK':
+            print("Choose: Y %s" %(choose))
+            if 'NICK' in line:
+                print("New nick is %s " % (spl))
+                return True, spl[2][1:]
+       return False, ""
+
    async def commands(self):
            await self.handl()
            #try:

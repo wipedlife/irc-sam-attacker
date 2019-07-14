@@ -1,6 +1,7 @@
 from .commands import IRCCommands
 from .handler_msg import handler_msg as handler
 from leaflet import Controller as SAM
+import socket,socks
 import time
 
 class IRCOverlay(IRCCommands):
@@ -37,29 +38,49 @@ class IRCOverlay(IRCCommands):
                     
             #Commands...
        
-   def connect(self,addr):
-    try:
-      self.samd=SAM().create_dest()
-      #with SAM().create_dest() as dest:
-      print("Connect to %s" % (addr) )
-      self.sock=self.samd.connect(addr)
-      answer=self.oread()
-      if "RESULT=OK" in answer:
-       print("Connected to %s" % (addr) )
-       return True
-      else:
-       print("Can't connect to %s" % (addr) )
-       raise Exception("Can't connect to server", "Error with connect:  %s" % (answer) )
-    except Exception as err:
-      print ("Error %s" % err)
-      self.sock.close()
-      self.connect(addr)
-   def __init__(self,dest,nick,username,realname):
+   def connect(self,addr,typ="",port=6667):
+     conf=  self.read_cfg("config.ini")
+     torport=9050
+     try:
+      if not conf['CONNECTION']['type'] is None:
+         typ=conf['CONNECTION']['type']
+      if not conf['CONNECTION']['tor_port'] is None:
+         torport=int(conf['CONNECTION']['tor_port'])
+     except Exception:
+         pass
+     #print("Connect with type: "+str(typ))
+     try:
+       if "i2p" in typ:
+          self.samd=SAM().create_dest()
+          #with SAM().create_dest() as dest:
+          print("Connect to %s" % (addr) )
+          self.sock=self.samd.connect(addr)
+          answer=self.oread()
+          if "RESULT=OK" in answer:
+           print("Connected to %s" % (addr) )
+           return True
+          else:
+           print("Can't connect to %s" % (addr) )
+           raise Exception("Can't connect to server", "Error with connect:  %s" % (answer) )
+       elif "clear" in typ or "tor" in typ:
+           if "tor" in typ:
+            socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', torport, True)
+            self.sock=socks.socksocket()
+           else:
+            self.sock=socket.socket()
+
+
+           self.sock.connect((addr,port))
+       else:
+           raise Exception("undefined type", "Undefined type of connection")
+     except OSError as msg:
+           self.sock.close()
+           raise Exception ('Cant connect',"Can't connest to %s : %d" % (addr, port))
+   def __init__(self,dest,nick,username,realname,p=6667):
         if dest is None:
           self.sock.close()
           return None
-         
-        self.connect(dest)
+        self.connect(dest,port=p)
         self.irc_conn(nick,username,realname)
         self.hand=handler(self.sock)
 

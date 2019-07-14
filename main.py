@@ -1,11 +1,12 @@
 #!/bin/python3.7
-import asyncio,sys,time # todo 
+# -*- coding: cp1251 -*-
+import sys,time # todo
 #from irc import overlay
 from irc import attacker
-import configparser
+import configparser, asyncio
 def main():
  if len(sys.argv) < 3:
-  print (sys.argv[0]+"addr victim")
+  print (sys.argv[0]+" addr victim")
   sys.exit()
 #  print ( "Init" )
 # config=configparser.ConfigParser()
@@ -25,4 +26,3 @@ def main():
  while True:
   pass
 main()
-

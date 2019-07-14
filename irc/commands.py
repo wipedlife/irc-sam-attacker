@@ -29,8 +29,26 @@ class IRCCommands:
        self.raw("PRIVMSG %s :%s" % (to, msg) )
    def quit(self,reason):
        self.raw( "QUIT %s" % (reason) )
+   def whois(self,who):
+       self.raw("WHOIS %s" % (who) )
+       answer=""
+       while not ":End of /WHOIS list." in answer:
+        answer= answer+self.oread()
+       return answer
+   def motd_skip(self):
+       while not "MOTD" in self.oread():
+        pass
+   def getChannels(self, who):
+       answer=self.whois(who)
+       answer=answer.split('\n')
+       for ans in answer:
+        if "#" in ans: # channels
+           print("answ:"+ans)
+           print( ans.split(':') )
+           return (ans.split(':')[2][1:]).split(' ')
+       return []
 
-        
+
    def getuser(self,user):
        user=user[1:]
        user=user.split("!")

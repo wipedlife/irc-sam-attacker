@@ -1,5 +1,7 @@
+# -*- coding: cp1251 -*-
 from .overlay import IRCOverlay
-import configparser, sys, threading, random, string,time
+import configparser, sys, threading, random, string,time, asyncio
+
 class BotAttack(threading.Thread):
  irc=IRCOverlay(None,None,None,None)
  victim=""
@@ -7,6 +9,9 @@ class BotAttack(threading.Thread):
  username=""
  realname=""
  dest=""
+ sleepTime=0
+ victim_channels=[]
+ my_channels=[]
  def __init__(self,serv,victim,nick,username,realname):
   self.victim=victim
   self.nick=nick
@@ -14,24 +19,48 @@ class BotAttack(threading.Thread):
   self.realname=realname
   self.dest=serv
   super(BotAttack, self).__init__()
- 
+
+ async def getVictimChannels(self):
+  self.victim_channels = self.irc.getChannels(self.victim)
+  for chn in self.victim_channels:
+    if not chn in self.my_channels:
+     self.irc.cjoin(chn)
+     self.my_channels.append(chn)
+
+
+ async def trollVictim(self):
+  for chn in self.my_channels:
+   if "@" in chn:
+    chn=chn[1:]
+   self.irc.privmsg(chn,"%s Trololo" % (self.victim)) #Trololo
+   self.irc.privmsg(self.victim,"%s Trololo " %(self.victim)) # Trololo
+
+  pass
+ async def loop(self):
+  while True:
+   await self.getVictimChannels()
+   await self.trollVictim()
+   await self.irc.hand.handl()
+   asyncio.sleep(self.sleepTime)
+   pass
+
  def run(self):
   self.irc=IRCOverlay(self.dest,
   self.nick,
   self.username,
   self.realname)
   print("Bot %s inited" % (self.nick) )
-  self.irc.cjoin("#ru")  
-  self.irc.hand.commands()
-  pass
+  asyncio.run(asyncio.coroutine(self.loop)())
+
 
 class attack():
  victim=""
  botsM=0
  bots=[]
 
- def __init__(self, serv,victim, count=10, nicks_from_file=False,nicklength=8,pause_bot=30):
+ def __init__(self, serv,victim, count=2, nicks_from_file=False,nicklength=8,pause_bot=30,sleepTime=30):
   self.victim=victim
+  self.sleepTime = sleepTime
   nicks=[]
   if nicks_from_file:
      with open('Nicks','r') as nicksf:
@@ -48,3 +77,4 @@ class attack():
          time.sleep(pause_bot)
         except RuntimeError:
          pass
+

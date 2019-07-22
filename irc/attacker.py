@@ -59,14 +59,16 @@ class BotAttack(threading.Thread):
     if not chn in self.my_channels:
      if chn[0] != '#':
       chn=chn[1:]
+      if chn !='#':
+       continue
      print("join to %s" % (chn))
      self.irc.cjoin(chn)
      self.my_channels.append(chn)
  async def update_own_channels(self):
   for chn in self.my_channels:
     if not chn in self.victim_channels:
-     #self.irc.leave(chn)
-     #self.my_channels.remove(chn)
+     self.irc.leave(chn)
+     self.my_channels.remove(chn)
      pass
  async def trollVictim(self):
   for chn in self.my_channels:
@@ -81,7 +83,7 @@ class BotAttack(threading.Thread):
     else:
      phras=str( phrases[  random.randrange(len(phrases)) ] )
      self.irc.privmsg(chn, "%s %s" % (self.victim, phras ))  # Trololo
-     #self.irc.privmsg(self.victim, "%s %s " % (self.victim,phras ))  # Trololo
+     self.irc.privmsg(self.victim, "%s %s " % (self.victim,phras ))  # Trololo
  async def chase_victim(self):
 
   pass

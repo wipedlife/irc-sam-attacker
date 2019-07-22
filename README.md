@@ -1,9 +1,11 @@
 # irc-sam-attacker
 ## Usage
+```
 ./main.py <addr> <victim> <port> -> flood to victim
 ./guesser.py <addr> <victim> <port> -> anti-quiz bot
 ./gen_nicks.sh count -> gen file of nicks (Nicks)
 proxychains ./update_openproxy.py -> update open proxy list to openproxy_list.txt
+```
 ### Config options
 ```
 [CONNECTION]

@@ -32,3 +32,19 @@ hostname=a@a.b32.i2p -> ...
 [GUESSER]
 file=3hauka-utf.txt -> file of dictionary for anti-quiz mode
 ```
+Bot command:
+```
+irc/handler_msg.py
+
+   async def mes_handle(self,msg,to):
+       com=msg.split(' ')
+      # print("splited (mes_handle): "+str(com))
+       if com[0] == "echo" and len(com) > 1 :
+           self.privmsg( to, " ".join(com[1:]) )
+       if com[0] == "quit" and len(com) > 1:
+           self.quit(" ".join(com[1:]))
+           sys.exit(0)
+       if "whois_channels" in com[0] and len(com) > 1:
+           channels=self.getChannels(com[1])
+           self.privmsg(  "Channels of him: %s" %s ( str(channels) ) )
+```

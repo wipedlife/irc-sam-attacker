@@ -1,13 +1,13 @@
 from .commands import IRCCommands
 from .handler_msg import handler_msg as handler
 from leaflet import Controller as SAM
-import socket,socks
+import socket,socks,random
 import time
+proxy_file="openproxy_list.txt"
 
 class IRCOverlay(IRCCommands):
    samd=None           
    hand=None
-
    def ping_pong(self):
            MAXREAD=30 # OverKill
            ST=1
@@ -67,6 +67,10 @@ class IRCOverlay(IRCCommands):
                if typ == "tor":
                   socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', torport, True)
                elif typ == "openproxy":
+                   with open(proxy_file,"r+") as openproxy:
+                       list_openproxy=openproxy.read().split('\n')
+                       proxy=list.openproxy[random.randrange(0,len(list.openproxy)-1)].split(':')
+                       socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, proxy[0], proxy[1], True)
                    pass
                self.sock=socks.socksocket()
            else:

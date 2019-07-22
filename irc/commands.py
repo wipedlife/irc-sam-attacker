@@ -10,7 +10,7 @@ class IRCCommands(cfg):
 
    def read_cfg(self,cfgn="config.ini"):
        if cfgn != "config.ini":
-        return cfg(cfgn)
+        return cfg(cfgn).config
        return self.config
    def owrite(self,s):
        self.sock.send( (s+'\n').encode(self.config["CONNECTION"]['encoding']) )

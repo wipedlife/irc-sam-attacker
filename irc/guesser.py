@@ -25,10 +25,11 @@ class guesser(conf_bot):
        except UnicodeDecodeError as err:
            print("Try other encoding... %s (raise..)\n" % (err) )
            raise err
-       print("Read base: ")
-       for b in self.base_a:
-           print("%s|%s" % (b, self.base_a[b]))
-       print("End of base.")
+ #      print("Read base: ")
+#       for b in self.base_a:
+#           print("%s|%s" % (b, self.base_a[b]))
+
+  #     print("End of base.")
 
     def loop(self):
      try:
@@ -52,7 +53,7 @@ class guesser(conf_bot):
                    msg = re.sub(r"[\x02\x1F\x0F\x16]|\x03(\d\d?(,\d\d?)?)?", "", msg).rstrip()
                    chn=spl[2]
                    if useri["nick"] == self.bot_nick:
-                       if random.range(0, 300) > 60:
+                       if random.randint(0, 300) > 60:
                            fatality_phrase="Ну что гугляры, поиграем в игру?"
                            self.irc.privmsg(chn,fatality_phrase)
 

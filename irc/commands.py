@@ -119,6 +119,7 @@ class IRCCommands(cfg):
                         return True
 
         pass
+        return True
    def getChannels(self, who):
        t=self.whois(who)
        if t is not False:

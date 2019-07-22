@@ -21,7 +21,8 @@ class guesser(conf_bot):
 
                splited=d.split('|')
                if len(splited) ==2:
-                splited[0]=''.join([char for char in splited[0] if char.isalpha()])
+                splited[0]=''.join([char for char in splited[0] if char.isalpha() or char.isspace()])
+                #print("Add to base %s|%s" %(splited[0].lower(),splited[1].lower()))
                 self.base_a[splited[0].lower()]=splited[1].lower()
        except UnicodeDecodeError as err:
            print("Try other encoding... %s (raise..)\n" % (err) )
@@ -44,7 +45,7 @@ class guesser(conf_bot):
                if spl[1] == 'PRIVMSG':                       
                    useri = self.irc.getuser(spl[0])
 
-                   msg = ' '.join(spl[3:][2:])
+                   msg = ' '.join(spl[3:][2:]).lower()
                    msg=' '.join(msg.split(' ')[0:])
 
 
@@ -91,7 +92,7 @@ class guesser(conf_bot):
                        print("bot %s with hostname %s write message on %s -> %s" % (useri["nick"], useri["host"], chn, msg))
                        print("Search in base %s" % (msg) )
                        for key in self.base_a:
-                           key=key.lower()
+                           key=key
                            if key in msg:
                             print("Yeeh write!")
                             self.irc.privmsg(chn, self.base_a[key])

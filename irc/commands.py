@@ -26,7 +26,10 @@ class IRCCommands(cfg):
             if self.config["CONNECTION"]['type']=="tor":
              os.system("killall -HUP tor")
              time.sleep(35)
-            raise Exception('Connection is closed', ' connection was closed:') 
+            raise Exception('Connection is closed', ' connection was closed:')
+        if "ERROR :Closing Link:" in data:
+            print("Link is closing %s" % (data))
+            return False
         return data 
 
    def raw(self,com):
@@ -101,6 +104,9 @@ class IRCCommands(cfg):
        data=""
        while not "MOTD" in data:
         data=self.oread()
+        if data == False:
+
+            return False
         print("Motd: %s" % (data) )
         for line in data.split('\n'):
                   # print ("Ping_Pong line - " + line)

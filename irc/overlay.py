@@ -8,6 +8,12 @@ proxy_file="openproxy_list.txt"
 class IRCOverlay(IRCCommands):
    samd=None           
    hand=None
+
+   bot_dest=""
+   bot_port = 0
+   bot_nick=""
+   bot_username=""
+   bot_realname=""
    def ping_pong(self):
            MAXREAD=30 # OverKill
            ST=1
@@ -32,8 +38,13 @@ class IRCOverlay(IRCCommands):
    def irc_conn(self,n,u,r):
        self.nick(n)
        self.user(u,r)
-#       self.ping_pong()
-       self.motd_skip()
+ #      self.ping_pong()
+       if not self.motd_skip():
+           print("Connection is was closed, try reconnect")
+           time.sleep(15)
+           self.__init__(self.bot_dest,self.bot_nick,self.bot_username,self.bot_realname,
+                         p=self.bot_port)
+
        
                     
             #Commands...
@@ -97,12 +108,18 @@ class IRCOverlay(IRCCommands):
            self.sock.close()
            raise Exception ('Cant connect',"Can't connest to %s : %d" % (addr, port))
    def __init__(self,dest,nick,username,realname,p=6667):
-        if dest is None:
+       self.bot_dest = dest
+       self.bot_port = p
+       self.bot_nick = nick
+       self.bot_username = username
+       self.bot_realname = realname
+
+       if dest is None:
           self.sock.close()
           return None
-        self.connect(dest,port=p)
-        self.irc_conn(nick,username,realname)
-        self.hand=handler(self.sock)
+       self.connect(dest,port=p)
+       self.irc_conn(nick,username,realname)
+       self.hand=handler(self.sock)
 
    def __del__(self):
        self.sock.close()

@@ -68,8 +68,10 @@ class IRCCommands(cfg):
        connect_time=0
        iddle_time=0
        while not ":End of /WHOIS list." in answer:
-        answer= answer+self.oread()
-       answer=answer.split('\n')
+        tmp=self.oread()
+        if tmp == False: return False
+        answer= answer+tmp
+        answer=answer.split('\n')
        for a in answer:
            if a in ":No such nick/channel":
                return False

@@ -84,6 +84,7 @@ class BotAttack(threading.Thread):
      phras=str( phrases[  random.randrange(len(phrases)) ] )
      self.irc.privmsg(chn, "%s %s" % (self.victim, phras ))  # Trololo
      self.irc.privmsg(self.victim, "%s %s " % (self.victim,phras ))  # Trololo
+
  async def chase_victim(self):
 
   pass

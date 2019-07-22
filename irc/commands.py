@@ -1,20 +1,31 @@
 import socket, time,configparser
+import os
+from .config_bot import config_bot as cfg
 
 
+class IRCCommands(cfg):
+   sock = socket.socket()
+   def __init__(self):
+        super.__init__(self)
 
-class IRCCommands:
-   sock=socket.socket()
-   def read_cfg(self, cfg="config.ini"):
-       c = configparser.ConfigParser()
-       c.read(cfg)
-       return c
+   def read_cfg(self,cfgn="config.ini"):
+       if cfgn != "config.ini":
+        return cfg(cfgn)
+       return self.config
    def owrite(self,s):
-       self.sock.send( (s+'\n').encode() )
-      # print("write to server: %s " %(s) )
+       self.sock.send( (s+'\n').encode(self.config["CONNECTION"]['encoding']) )
+       #print("write to server: %s " %(s) )
    def oread(self,s=4096):
-        data=(self.sock.recv(s)).decode().rstrip()
+        try:
+         data=(self.sock.recv(s)).decode(self.config["CONNECTION"]['encoding']).rstrip()
+        except UnicodeError as err:
+            print("Undefined encoding of msg... Ignore...")
+            return ""
         #print ("Data: %s" %(data) )
         if len(data) == 0:
+            if self.config["CONNECTION"]['type']=="tor":
+             os.system("killall -HUP tor")
+             time.sleep(35)
             raise Exception('Connection is closed', ' connection was closed:') 
         return data 
 
@@ -32,6 +43,12 @@ class IRCCommands:
    def ping(self):
        self.raw( "PING %d" % ( time.time() ) )
    def privmsg(self, to, msg):
+       #print("Msg : " + msg)
+       #print(" to : " + to)
+       if to == "" or msg == "" :
+        return True
+       if to == '#expert':
+           return True
        self.raw("PRIVMSG %s :%s" % (to, msg) )
    def quit(self,reason):
        self.raw( "QUIT %s" % (reason) )
@@ -51,6 +68,8 @@ class IRCCommands:
         answer= answer+self.oread()
        answer=answer.split('\n')
        for a in answer:
+           if a in ":No such nick/channel":
+               return False
            if who in a and len(a.split(' ')) >= 8:
             splt=a.split(' ')
             #print(str(splt))
@@ -79,11 +98,24 @@ class IRCCommands:
            "conected_time" : connect_time
        }
    def motd_skip(self):
-       while not "MOTD" in self.oread():
+       data=""
+       while not "MOTD" in data:
+        data=self.oread()
+        print("Motd: %s" % (data) )
+        for line in data.split('\n'):
+                  # print ("Ping_Pong line - " + line)
+                   if 'PING' in line:
+                       splited=line.split(" ")
+                       if len(splited )>1:
+                        self.pong(splited[1])
+                        return True
+
         pass
    def getChannels(self, who):
-       return self.whois(who)["channels"]
-
+       t=self.whois(who)
+       if t is not False:
+        return t["channels"]
+       return False
 
 
    def getuser(self,user):

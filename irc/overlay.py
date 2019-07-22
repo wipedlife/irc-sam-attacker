@@ -32,7 +32,7 @@ class IRCOverlay(IRCCommands):
    def irc_conn(self,n,u,r):
        self.nick(n)
        self.user(u,r)
-       self.ping_pong()
+#       self.ping_pong()
        self.motd_skip()
        
                     

@@ -38,7 +38,7 @@ class handler_msg(IRCCommands):
                    print("%s  with hostname %s write message on %s -> %s" % (useri["nick"], useri["host"], spl[2], msg))
                    if useri["nick"] == self.onick and useri['host'] == self.ohostname:
                        await self.mes_handle(line.split(':')[2], spl[2])
-           print("Line: %s" % (line))
+           #print("Line: %s" % (line))
            if len(spl) >= 3 and spl[1] == 'NICK':
             print("Choose: Y %s" %(choose))
             if 'NICK' in line:

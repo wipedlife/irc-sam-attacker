@@ -18,12 +18,12 @@ class guesser(conf_bot):
         data = fb.read().split('\n')
         for d in data:
                d=self.del_bytes(d)
-
+               d=d.lower()
                splited=d.split('|')
                if len(splited) ==2:
-                splited[0]=''.join([char for char in splited[0] if char.isalpha() or char.isspace()])
+                #splited[0]=''.join([char for char in splited[0] if char.isalpha() or char.isspace()])
                 #print("Add to base %s|%s" %(splited[0].lower(),splited[1].lower()))
-                self.base_a[splited[0].lower()]=splited[1].lower()
+                self.base_a[splited[0]]=splited[1]
        except UnicodeDecodeError as err:
            print("Try other encoding... %s (raise..)\n" % (err) )
            raise err
@@ -90,11 +90,11 @@ class guesser(conf_bot):
                         print("I will add new answer for ask %s" % (self.tmp_n_ask))
                        msg=msg.split('(')[0]
                        print("bot %s with hostname %s write message on %s -> %s" % (useri["nick"], useri["host"], chn, msg))
-                       print("Search in base %s" % (msg) )
-                       for key in self.base_a:
-                           key=key
-                           if key in msg:
-                            print("Yeeh write!")
+                       if len(msg) > 0:
+                        print("Search in base %s" % (msg) )
+                        for key in self.base_a:
+                           if key in msg :
+                            print("Yeeh write! %s in %s" %(key,msg))
                             self.irc.privmsg(chn, self.base_a[key])
                            # answ=self.irc.oread()
                           #  if self.bot_nick in answ:

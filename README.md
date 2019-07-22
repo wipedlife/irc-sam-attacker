@@ -5,6 +5,7 @@
 ./gen_nicks.sh count -> gen file of nicks (Nicks)
 proxychains ./update_openproxy.py -> update open proxy list to openproxy_list.txt
 ### Config options
+```
 [CONNECTION]
 type=tor/clear/openproxy/i2p 
 
@@ -30,3 +31,4 @@ hostname=a@a.b32.i2p -> ...
 
 [GUESSER]
 file=3hauka-utf.txt -> file of dictionary for anti-quiz mode
+```

@@ -39,6 +39,7 @@ class IRCOverlay(IRCCommands):
        self.nick(n)
        self.user(u,r)
  #      self.ping_pong()
+       print("Motd skiping")
        if not self.motd_skip():
            print("Connection is was closed, try reconnect")
            time.sleep(15)

@@ -106,19 +106,19 @@ class IRCCommands(cfg):
        data=""
        while not "MOTD" in data:
         data=self.oread()
-        if data == False:
-
+        if data is False:
             return False
         print("Motd: %s" % (data) )
-        for line in data.split('\n'):
+        try:
+         for line in data.split('\n'):
                   # print ("Ping_Pong line - " + line)
                    if 'PING' in line:
                        splited=line.split(" ")
                        if len(splited )>1:
                         self.pong(splited[1])
                         return True
-
-        pass
+        except Exception:
+         pass
         return True
    def getChannels(self, who):
        t=self.whois(who)

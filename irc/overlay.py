@@ -68,9 +68,22 @@ class IRCOverlay(IRCCommands):
                   socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', torport, True)
                elif typ == "openproxy":
                    with open(proxy_file,"r+") as openproxy:
+
                        list_openproxy=openproxy.read().split('\n')
-                       proxy=list.openproxy[random.randrange(0,len(list.openproxy)-1)].split(':')
-                       socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, proxy[0], proxy[1], True)
+                       success=False
+                       while not success:
+                        try:
+                         proxy=list_openproxy[random.randrange(0,len(list_openproxy)-1)].split(':')
+                         proxy[1]=int(proxy[1])
+                         print("Connect to %s:%d" % (proxy[0], proxy[1]))
+                         socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, proxy[0], int(proxy[1]), True)
+                         print("Connected to %s:%d" % (proxy[0],proxy[1]))
+                         success=True
+                        except Exception:
+                            print("cant connect to %s:%d" % (proxy[0],proxy[1]))
+                            success=False
+                            continue
+
                    pass
                self.sock=socks.socksocket()
            else:

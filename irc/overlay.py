@@ -62,10 +62,13 @@ class IRCOverlay(IRCCommands):
           else:
            print("Can't connect to %s" % (addr) )
            raise Exception("Can't connect to server", "Error with connect:  %s" % (answer) )
-       elif "clear" in typ or "tor" in typ:
-           if "tor" in typ:
-            socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', torport, True)
-            self.sock=socks.socksocket()
+       elif "clear" in typ or "tor" in typ or "openproxy":
+           if "tor" in typ or "openproxy" in typ:
+               if typ == "tor":
+                  socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', torport, True)
+               elif typ == "openproxy":
+                   pass
+               self.sock=socks.socksocket()
            else:
             self.sock=socket.socket()
 

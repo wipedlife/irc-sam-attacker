@@ -53,8 +53,7 @@ class BotAttack(threading.Thread):
   if self.victim_channels == False:
    return False
   for chn in self.victim_channels:
-
-    if chn == '#expert':
+    if chn in self.irc.config['BOT']['ignore_chns'].split(','):
      continue
     if not chn in self.my_channels:
      if chn[0] != '#':

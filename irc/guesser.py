@@ -33,7 +33,6 @@ class guesser(conf_bot):
     def loop(self):
      try:
        data = self.irc.oread()
-      
        for line in data.split('\n'):
            print("Line is : %s " % (line) )
            spl = line.split(' ')
@@ -53,6 +52,10 @@ class guesser(conf_bot):
                    msg = re.sub(r"[\x02\x1F\x0F\x16]|\x03(\d\d?(,\d\d?)?)?", "", msg).rstrip()
                    chn=spl[2]
                    if useri["nick"] == self.bot_nick:
+                       if random.range(0, 300) > 60:
+                           fatality_phrase="Ну что гугляры, поиграем в игру?"
+                           self.irc.privmsg(chn,fatality_phrase)
+
                        if self.tmp_n_ask !="" and ("Верный ответ" in line or "правильный ответ" in msg or "Точный ответ" in msg or "Правильный ответ -> " in msg):
                          shitcode=""
                          if "правильный ответ" in msg:
@@ -95,10 +98,10 @@ class guesser(conf_bot):
          pass
                        
                    
-    def __init__(self, serv,channel,bot_nick):
+    def __init__(self, serv,channel,bot_nick,port=6667):
         super().__init__()
         self.init_base()
-        self.irc=IRCOverlay(serv,self.rand_string(),self.rand_string(),self.rand_string())
+        self.irc=IRCOverlay(serv,self.rand_string(),self.rand_string(),self.rand_string(),p=port)
         self.bot_nick=bot_nick
         self.irc.cjoin(channel)
         self.irc.privmsg(channel,"!start")
@@ -106,3 +109,33 @@ class guesser(conf_bot):
          self.loop()
          
         pass
+
+class Guesser_Flooder_Thread(threading.Thread):
+    bot=None
+    dest=""
+    chn=""
+    victim=""
+    def __init__(self,dest,chn,victim):
+     super(Guesser_Flooder_Thread, self).__init__()
+     self.dest=dest
+     self.chn=chn
+     self.victim=victim
+     pass
+    def run(self):
+        print("Thread of flooder init")
+        bot = guesser(self.dest, self.chn, self.victim)
+        pass
+
+class Guesser_Flooder:
+    threads=[]
+    def __init__(self,dest,chn,victim,count=60,pause_bot=5):
+     while True:
+       for i in range(0,count):
+         print("Add thread of bot")
+         self.threads.append(Guesser_Flooder_Thread(dest,chn,victim))
+
+       for bot in self.threads:
+         bot.start()
+         time.sleep(pause_bot)
+       for bot in self.threads:
+           bot.join()

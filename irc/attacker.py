@@ -15,7 +15,7 @@ class BotAttack(threading.Thread):
  victim_channels=[]
  my_channels=[]
  victim_info=[]
- cfg=conf_bot()
+ cfg=conf_bot.config_bot()
  async def update_config(self,nick):
   vic = self.irc.read_cfg("victims.ini")
   vic[self.victim]['nick']=nick

@@ -30,8 +30,8 @@ class BotAttack(threading.Thread):
     tmp={}
     print("init vimctim_info")
     for info in victim_info:
-     #print("Info %s" % (info))
-     #print("Value: %s " % (victim_info[info]))
+     print("Info %s" % (info))
+     print("Value: %s " % (victim_info[info]))
 
      tmp[info]=victim_info[info]
      with open("victims.ini", "w+") as victims_file:

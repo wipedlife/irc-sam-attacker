@@ -2,7 +2,7 @@ from .commands import IRCCommands
 from .handler_msg import handler_msg as handler
 from leaflet import Controller as SAM
 import socket,socks,random
-import time
+import time,configparser
 proxy_file="openproxy_list.txt"
 
 class IRCOverlay(IRCCommands):
@@ -38,7 +38,11 @@ class IRCOverlay(IRCCommands):
    def irc_conn(self,n,u,r):
        self.nick(n)
        self.user(u,r)
- #      self.ping_pong()
+       config = configparser.ConfigParser()
+       config.read("config.ini")
+       config = config["CONNECTION"]
+       if config['ignore_ping'] != 'true':
+        self.ping_pong()
        print("Motd skiping")
        if not self.motd_skip():
            print("Connection is was closed, try reconnect")

@@ -55,16 +55,25 @@ class BotAttack(threading.Thread):
   for chn in self.victim_channels:
     if chn in self.irc.config['BOT']['ignore_chns'].split(','):
      continue
+    print ("chn "+ chn)
     if not chn in self.my_channels:
      if chn[0] != '#':
       chn=chn[1:]
-      if chn !='#':
-       continue
+      if not '#' in chn:
+          continue
+      chn=chn[chn.find('#'):]
+
+       
      print("join to %s" % (chn))
      self.irc.cjoin(chn)
      self.my_channels.append(chn)
  async def update_own_channels(self):
   for chn in self.my_channels:
+    if chn[0] != '#':
+      chn=chn[1:]
+      if not '#' in chn:
+          continue
+      chn=chn[chn.find('#'):]
     if not chn in self.victim_channels:
      self.irc.leave(chn)
      self.my_channels.remove(chn)

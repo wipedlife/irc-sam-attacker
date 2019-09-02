@@ -75,14 +75,14 @@ class BotAttack(threading.Thread):
           continue
       chn=chn[chn.find('#'):]
     if not chn in self.victim_channels:
-     self.irc.leave(chn)
-     self.my_channels.remove(chn)
+   #  self.irc.leave(chn)
+    # self.my_channels.remove(chn)
      pass
  async def trollVictim(self):
   for chn in self.my_channels:
    print("Write to %s msg" % (chn))
    #todo: fix (Line: :XXX XXX XXX :No recipient given (PRIVMSG))
-   with open('phrases.txt','r+',encoding="cp1251") as phrasesf:
+   with open('phrases.txt','r+') as phrasesf:
     phrases=(phrasesf.read()).split("\n")
    # print(phrases)
     if len(phrases) == 0:
